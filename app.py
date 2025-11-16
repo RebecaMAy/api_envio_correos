@@ -46,9 +46,9 @@ def enviar_verificacion():
         # 2. Construir la URL de verificación (apuntando a tu script PHP)
         # Usamos el correo (p1) y el token (p2)
         link_final = f"{URL}/verificar_usuario.php?p1={email_destino}&p2={token}"
-        
+
         newsletter = render_template(
-            'verificacion_email.html', 
+            'verificacion-correo.html', 
             link_verificacion=link_final
         )
 
