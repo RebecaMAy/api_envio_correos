@@ -23,11 +23,10 @@ def rellenar_correo(asunto, email_destino, newsletter):
     return msg
 
 def enviar_por_SMTP(email_destino, mensaje):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls() # Cifrado TLS
-    server.login(SMTP_USER, SMTP_PASSWORD)
-    server.sendmail(SMTP_USER, email_destino, mensaje.as_string())
-    server.quit()
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(SMTP_USER, SMTP_PASSWORD)
+        server.sendmail(SMTP_USER, email_destino, mensaje.as_string())
 
 @app.route('/warmup', methods=['GET'])
 def despertar_api():
@@ -47,8 +46,7 @@ def enviar_verificacion():
         # 2. Construir la URL de verificación (apuntando a tu script PHP)
         # Usamos el correo (p1) y el token (p2)
         link_final = f"{URL}/verificar_usuario.php?p1={email_destino}&p2={token}"
-
-        # 3. Renderizar el HTML con Jinja2
+        
         newsletter = render_template(
             'verificacion_email.html', 
             link_verificacion=link_final
