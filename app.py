@@ -62,7 +62,6 @@ def enviar_verificacion():
     msg['From'] = SMTP_USER
     msg['To'] = email_destino
     msg.attach(MIMEText(newsletter, 'html'))
-    return msg
 
     #mensaje = rellenar_correo(asunto, email_destino, newsletter)
     #enviar_por_SMTP(email_destino, mensaje)
