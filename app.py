@@ -46,6 +46,7 @@ def enviar_verificacion():
 
     # 2. Construir la URL de verificación (apuntando a tu script PHP)
     # Usamos el correo (p1) y el token (p2)
+    """
     link_final = f"{URL}/verificar_usuario.php?p1={email_destino}&p2={token}"
 
     newsletter = render_template(
@@ -66,7 +67,7 @@ def enviar_verificacion():
     #mensaje = rellenar_correo(asunto, email_destino, newsletter)
     #enviar_por_SMTP(email_destino, mensaje)
     print("despues de rellenar correo")
-
+    """
     try:
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -75,7 +76,7 @@ def enviar_verificacion():
         print("ls")
         server.login(SMTP_USER, SMTP_PASSWORD)
         print("login")
-        server.sendmail(SMTP_USER, email_destino, mensaje.as_string())
+        server.sendmail(SMTP_USER, email_destino, "hola")
         print("enviar")
         server.quit()
 
