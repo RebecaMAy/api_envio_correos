@@ -4,12 +4,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+import resend
 
 app = Flask(__name__)
 CORS(app)
 
-SMTP_USER = os.environ.get("SMTP_USER")
-SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
+resend.api_key = os.environ.get("API_KEY")
 
 # URL de donde este alojado 
 URL = ""
@@ -43,6 +43,8 @@ def enviar_verificacion():
 
     if not email_destino or not token:
         return jsonify({"error": "Faltan datos"}), 400
+    
+    asunto = "Verifica tu cuenta - Breathe Tracking"
 
     # 2. Construir la URL de verificación (apuntando a tu script PHP)
     # Usamos el correo (p1) y el token (p2)
@@ -56,7 +58,7 @@ def enviar_verificacion():
 
     print("despues de jinja2")
 
-    asunto = "Verifica tu cuenta - Breathe Tracking"
+    
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = asunto
@@ -67,7 +69,7 @@ def enviar_verificacion():
     #mensaje = rellenar_correo(asunto, email_destino, newsletter)
     #enviar_por_SMTP(email_destino, mensaje)
     print("despues de rellenar correo")
-    """
+    
     try:
 
         server = smtplib.SMTP('smtp.gmail.com', 465)
@@ -83,6 +85,23 @@ def enviar_verificacion():
     except Exception as e:
         print(f"Error enviando correo: {e}")
         return jsonify({"error": "Fallo interno al enviar correo"}), 500
+    """
+    link_final = f"{URL}/verificar_usuario.php?p1={email_destino}&p2={token}"
+
+    newsletter = render_template(
+        'verificacion-correo.html', 
+        link_verificacion=link_final
+    )
+
+    params: resend.Emails.SendParams = {
+        "from": "Acme <onboarding@resend.dev>",
+        "to": email_destino,
+        "subject": "Verifica tu cuenta - Breathe Tracking",
+        "html": newsletter.mensaje.as_string(),
+    }
+
+    r = resend.Emails.send(params)
+    return jsonify(r)
 
 if __name__ == '__main__':
     app.run(debug=True)
