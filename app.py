@@ -36,30 +36,39 @@ def despertar_api():
 
 @app.route('/enviar-verificacion', methods=['POST'])
 def enviar_verificacion():
+    # 1. Obtener datos del cuerpo de la petición
+    data = request.get_json()
+    email_destino = data.get('email')
+    token = data.get('token')
+
+    if not email_destino or not token:
+        return jsonify({"error": "Faltan datos"}), 400
+
+    # 2. Construir la URL de verificación (apuntando a tu script PHP)
+    # Usamos el correo (p1) y el token (p2)
+    link_final = f"{URL}/verificar_usuario.php?p1={email_destino}&p2={token}"
+
+    newsletter = render_template(
+        'verificacion-correo.html', 
+        link_verificacion=link_final
+    )
+
+    print("despues de jinja2")
+
+    asunto = "Verifica tu cuenta - Breathe Tracking"
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = asunto
+    msg['From'] = SMTP_USER
+    msg['To'] = email_destino
+    msg.attach(MIMEText(newsletter, 'html'))
+    return msg
+
+    #mensaje = rellenar_correo(asunto, email_destino, newsletter)
+    #enviar_por_SMTP(email_destino, mensaje)
+    print("despues de rellenar correo")
+
     try:
-        # 1. Obtener datos del cuerpo de la petición
-        data = request.get_json()
-        email_destino = data.get('email')
-        token = data.get('token')
-
-        if not email_destino or not token:
-            return jsonify({"error": "Faltan datos"}), 400
-
-        # 2. Construir la URL de verificación (apuntando a tu script PHP)
-        # Usamos el correo (p1) y el token (p2)
-        link_final = f"{URL}/verificar_usuario.php?p1={email_destino}&p2={token}"
-
-        newsletter = render_template(
-            'verificacion-correo.html', 
-            link_verificacion=link_final
-        )
-
-        print("despues de jinja2")
-
-        asunto = "Verifica tu cuenta - Breathe Tracking"
-        mensaje = rellenar_correo(asunto, email_destino, newsletter)
-        #enviar_por_SMTP(email_destino, mensaje)
-        print("despues de rellenar correo")
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         print("server")
