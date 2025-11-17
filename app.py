@@ -54,14 +54,21 @@ def enviar_verificacion():
             link_verificacion=link_final
         )
 
+        print("despues de jinja2")
+
         asunto = "Verifica tu cuenta - Breathe Tracking"
         mensaje = rellenar_correo(asunto, email_destino, newsletter)
         #enviar_por_SMTP(email_destino, mensaje)
+        print("despues de rellenar correo")
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
+        print("server")
         server.starttls()
+        print("ls")
         server.login(SMTP_USER, SMTP_PASSWORD)
+        print("login")
         server.sendmail(SMTP_USER, email_destino, mensaje.as_string())
+        print("enviar")
         server.quit()
 
         return jsonify({"mensaje": "Correo enviado correctamente"}), 200
