@@ -70,10 +70,8 @@ def enviar_verificacion():
     """
     try:
 
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP('smtp.gmail.com', 465)
         print("server")
-        server.starttls()
-        print("ls")
         server.login(SMTP_USER, SMTP_PASSWORD)
         print("login")
         server.sendmail(SMTP_USER, email_destino, "hola")
