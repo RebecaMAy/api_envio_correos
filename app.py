@@ -97,7 +97,7 @@ def enviar_verificacion():
         "from": "Acme <onboarding@resend.dev>",
         "to": email_destino,
         "subject": "Verifica tu cuenta - Breathe Tracking",
-        "html": newsletter.mensaje.as_string(),
+        "html": newsletter.as_string(),
     }
 
     r = resend.Emails.send(params)
