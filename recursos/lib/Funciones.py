@@ -2,7 +2,7 @@
 import base64
 
 #LLAMADA A BBDDD
-from ConexionBBDD import db
+from recursos.lib.ConexionBBDD import db
 
 """
 -----------------------------------------
