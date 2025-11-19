@@ -1,4 +1,6 @@
-flask
+Flask
+flask-restful
 flask-cors
-gunicorn
 resend
+gunicorn
+firebase-admin
